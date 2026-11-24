@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lauki Phones — AI Telecom Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="scrim" id="scrim"></div>
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><i data-lucide="signal"></i></div>
+        <div class="brand-copy">
+          <h1>LAUKI PHONES</h1>
+          <p>AI Telecom Support</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" data-page="overview"><i data-lucide="layout-dashboard"></i><span class="label">Overview</span></button>
+        <button class="nav-btn" data-page="voice"><i data-lucide="audio-lines"></i><span class="label">Voice Agent</span></button>
+        <button class="nav-btn" data-page="conversations"><i data-lucide="messages-square"></i><span class="label">Customer Conversations</span></button>
+        <button class="nav-btn" data-page="services"><i data-lucide="smartphone"></i><span class="label">Telecom Services</span></button>
+        <button class="nav-btn" data-page="analytics"><i data-lucide="chart-column"></i><span class="label">Analytics</span></button>
+        <button class="nav-btn" data-page="settings"><i data-lucide="settings"></i><span class="label">Settings</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="status-row"><span class="dot" id="dot-backend"></span><span id="label-backend">Backend…</span></div>
+        <div class="status-row"><span class="dot" id="dot-livekit"></span><span id="label-livekit">LiveKit…</span></div>
+        <div class="status-row"><span class="dot" id="dot-agent"></span><span id="label-agent">Agent…</span></div>
+        <div class="profile-card">
+          <div class="avatar">LP</div>
+          <div class="profile-meta">
+            <strong id="profile-name">Lauki AI Support Assistant</strong>
+            <div style="font-size:11px;color:var(--muted)">Support operator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="icon-btn mobile-toggle" id="mobile-toggle" type="button"><i data-lucide="menu"></i></button>
+          <button class="icon-btn" id="collapse-sidebar" type="button"><i data-lucide="panel-left"></i></button>
+          <div>
+            <h2 id="page-title">Overview</h2>
+            <p id="page-subtitle">Live operations for Lauki Phones support</p>
+          </div>
+        </div>
+        <span class="badge">Voice-first customer support</span>
+      </header>
+
+      <section class="page active" id="page-overview">
+        <div id="overview-root"></div>
+      </section>
+
+      <section class="page" id="page-voice">
+        <div class="voice-layout">
+          <article class="card orb-stage">
+            <div class="orb-wrap">
+              <canvas id="orb-canvas"></canvas>
+            </div>
+            <canvas id="wave-canvas"></canvas>
+            <div class="orb-meta">
+              <h3>Lauki AI Support Assistant</h3>
+              <p id="voice-state">Ready for a customer call</p>
+            </div>
+            <div class="session-pills">
+              <span class="pill" id="voice-connection">Not connected</span>
+              <span class="pill" id="session-duration">00:00</span>
+              <span class="pill" id="mic-permission">Microphone: unknown</span>
+            </div>
+            <p id="voice-error" class="result-box" style="display:none"></p>
+            <div class="btn-row">
+              <button class="btn" id="start-session" type="button">Start voice session</button>
+              <button class="btn secondary" id="mute-session" type="button">Mute microphone</button>
+              <button class="btn danger" id="end-session" type="button">End voice session</button>
+            </div>
+            <div class="grid cards-2" style="width:min(520px,90%);margin-top:16px">
+              <div class="field">
+                <label for="audio-input">Audio input</label>
+                <select id="audio-input"><option>Available after connect</option></select>
+              </div>
+              <div class="field">
+                <label for="audio-output">Audio output</label>
+                <select id="audio-output"><option>Available after connect</option></select>
+              </div>
+            </div>
+          </article>
+          <article class="card transcript">
+            <h3>Live conversation</h3>
+            <p style="color:var(--muted);font-size:13px;margin-top:0">Audio is the primary channel. This panel records speech and tool events as they arrive.</p>
+            <div class="transcript-log" id="transcript-log">
+              <div class="empty">
+                <h4>No live transcript</h4>
+                <p>Start a session. Connection success is never simulated.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-conversations">
+        <div class="filters">
+          <input id="conv-search" placeholder="Search session, masked number, category" />
+          <select id="conv-category">
+            <option value="">All categories</option>
+            <option value="plans">Plans</option>
+            <option value="balance">Balance</option>
+            <option value="network">Network</option>
+            <option value="recommendation">Recommendation</option>
+            <option value="details">Plan details</option>
+            <option value="escalation">Escalation</option>
+            <option value="general">General</option>
+          </select>
+          <input id="conv-date" type="date" />
+          <button class="btn secondary" type="button" id="conv-refresh">Refresh</button>
+        </div>
+        <article class="card" id="conversations-table"></article>
+        <div id="conversation-detail" style="margin-top:16px"></div>
+      </section>
+
+      <section class="page" id="page-services">
+        <div class="grid services">
+          <article class="card service-card">
+            <div class="icon-chip"><i data-lucide="smartphone"></i></div>
+            <h4>Mobile data plans</h4>
+            <p>Search indexed plan documents through the existing search_plans tool.</p>
+            <form id="search-plans-form">
+              <div class="field"><label for="plans-query">What should we look up?</label><input id="plans-query" required placeholder="Compare 2GB and 5GB plans" /></div>
+              <button class="btn" type="submit">Search plans</button>
+            </form>
+            <div class="result-box" id="plans-result">Waiting for a backend search.</div>
+            <p class="hint">Plan names below come from the agent tool registry so details can be requested by exact name.</p>
+            <div class="grid cards-2" id="plan-compare" style="margin-top:12px"></div>
+          </article>
+
+          <article class="card service-card">
+            <div class="icon-chip"><i data-lucide="wallet"></i></div>
+            <h4>Account balance</h4>
+            <p>10-digit lookup only. Never enter OTP, PIN or password.</p>
+            <form id="balance-form">
+              <div class="field"><label for="balance-phone">Customer mobile number</label><input id="balance-phone" inputmode="numeric" maxlength="10" placeholder="9876543210" /></div>
+              <button class="btn" type="submit">Check balance</button>
+            </form>
+            <div class="result-box" id="balance-result">Waiting for a valid number.</div>
+          </article>
+
+          <article class="card service-card">
+            <div class="icon-chip"><i data-lucide="radio-tower"></i></div>
+            <h4>Network coverage</h4>
+            <p>4G/5G status from check_network_status. Coverage is never invented in the browser.</p>
+            <form id="network-form">
+              <div class="field"><label for="network-region">Region</label><select id="network-region"></select></div>
+              <button class="btn" type="submit">Check coverage</button>
+            </form>
+            <div class="result-box" id="network-result">Waiting for a region check.</div>
+          </article>
+
+          <article class="card service-card">
+            <div class="icon-chip"><i data-lucide="sparkles"></i></div>
+            <h4>Plan recommendations</h4>
+            <p>Usage preference is sent to get_plan_recommendation.</p>
+            <form id="recommend-form">
+              <div class="field">
+                <label for="usage-type">Usage pattern</label>
+                <select id="usage-type">
+                  <option value="light">Light</option>
+                  <option value="medium">Medium</option>
+                  <option value="heavy">Heavy</option>
+                  <option value="custom">Exact data need</option>
+                </select>
+              </div>
+              <div class="field"><label for="data-gb">Data (GB)</label><input id="data-gb" type="number" min="0" value="0" /></div>
+              <div class="field"><label for="voice-min">Voice minutes</label><input id="voice-min" type="number" min="0" value="0" /></div>
+              <button class="btn" type="submit">Recommend a plan</button>
+            </form>
+            <div class="result-box" id="recommend-result">Waiting for usage details.</div>
+          </article>
+
+          <article class="card service-card">
+            <div class="icon-chip"><i data-lucide="file-text"></i></div>
+            <h4>Plan details</h4>
+            <p>Price, validity, allowance and benefits from get_plan_details.</p>
+            <form id="details-form">
+              <div class="field"><label for="details-plan">Plan</label><select id="details-plan" data-plan-select></select></div>
+              <button class="btn" type="submit">View details</button>
+            </form>
+            <div class="result-box" id="details-result">Select a plan to retrieve backend details.</div>
+          </article>
+
+          <article class="card service-card">
+            <div class="icon-chip"><i data-lucide="headset"></i></div>
+            <h4>Support escalation</h4>
+            <p>Creates a ticket through escalate_to_support for issues the voice agent cannot close.</p>
+            <form id="escalate-form">
+              <div class="field"><label for="escalate-reason">Unresolved issue</label><textarea id="escalate-reason" required placeholder="Describe the customer issue"></textarea></div>
+              <button class="btn" type="submit">Escalate to human support</button>
+            </form>
+            <div class="result-box" id="escalate-result">No escalation submitted.</div>
+            <div id="escalate-history" class="transcript-log" style="margin-top:12px;max-height:220px"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-analytics">
+        <div id="analytics-root">
+          <div class="grid metrics" id="analytics-metrics"></div>
+          <div class="grid cards-2" style="margin-top:16px">
+            <article class="card">
+              <h3>Daily customer interactions</h3>
+              <svg class="chart" id="chart-daily"></svg>
+              <div class="empty" data-empty-chart><p>No daily session data yet.</p></div>
+            </article>
+            <article class="card">
+              <h3>Enquiry category distribution</h3>
+              <svg class="chart" id="chart-category"></svg>
+              <div class="empty" data-empty-chart><p>No tool categories recorded yet.</p></div>
+            </article>
+            <article class="card">
+              <h3>Successful vs escalated sessions</h3>
+              <svg class="chart" id="chart-outcome"></svg>
+              <div class="empty" id="chart-outcome-empty"><p>No completed sessions to compare yet.</p></div>
+              <div class="legend">
+                <span><i class="swatch" style="background:#34d399"></i>Resolved</span>
+                <span><i class="swatch" style="background:#fbbf24"></i>Escalated</span>
+                <span><i class="swatch" style="background:#60a5fa"></i>Other</span>
+              </div>
+            </article>
+            <article class="card">
+              <h3>Agent session activity</h3>
+              <svg class="chart" id="chart-activity"></svg>
+              <div class="empty" data-empty-chart><p>Activity appears after voice sessions are stored.</p></div>
+            </article>
+          </div>
+          <article class="card" style="margin-top:16px" id="analytics-notes"></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <article class="card" style="max-width:720px">
+          <h3>Workspace</h3>
+          <form id="settings-form">
+            <div class="field"><label for="setting-agent-name">Agent name</label><input id="setting-agent-name" /></div>
+            <div class="field">
+              <label><input id="setting-available" type="checkbox" style="width:auto" /> Agent available for new sessions</label>
+            </div>
+            <div class="field"><label for="setting-backend-url">Backend connection URL</label><input id="setting-backend-url" /></div>
+            <div class="field">
+              <label>LiveKit connection</label>
+              <div class="result-box" id="setting-livekit">Checking…</div>
+            </div>
+            <div class="field"><label for="setting-input">Audio input device</label><select id="setting-input"></select></div>
+            <div class="field"><label for="setting-output">Audio output device</label><select id="setting-output"></select></div>
+            <div class="field">
+              <label for="setting-theme">Theme</label>
+              <select id="setting-theme">
+                <option value="dark">Dark navy</option>
+                <option value="light">Light</option>
+              </select>
+            </div>
+            <button class="btn" type="submit">Save settings</button>
+          </form>
+          <div class="result-box" id="settings-result" style="margin-top:16px">Agent system instructions cannot be changed here.</div>
+          <p style="color:var(--muted);font-size:13px;margin-top:16px">
+            Lauki Phones dashboard · LiveKit voice agent · LangChain tools. API keys and LiveKit secrets are never shown in the browser.
+          </p>
+        </article>
+      </section>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@0.469.0"></script>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
